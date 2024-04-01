@@ -19,4 +19,8 @@
     <Folder Include="Extentions\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TaskManagementSystem.Core\TaskManagementSystem.Core.csproj" />
+  </ItemGroup>
+
 </Project>
