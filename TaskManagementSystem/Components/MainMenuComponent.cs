@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace RestaurantMenuAndOrder.Components
+namespace TaskManagementSystem.Components
 {
     public class MainMenuComponent : ViewComponent
     {

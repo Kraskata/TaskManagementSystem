@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using TaskManagementSystem.Core.Models.Home;
 using TaskManagementSystem.Models;
 
 namespace TaskManagementSystem.Controllers
@@ -15,7 +16,8 @@ namespace TaskManagementSystem.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var model = new IndexViewModel();
+            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
