@@ -14,7 +14,7 @@ namespace TaskManagementSystem.Core.Services
             repository = _repository;
         }
 
-        public async Task<IEnumerable<AssignmentIndexServiceModel>> NewestThreeAssignments()
+        public async Task<IEnumerable<AssignmentIndexServiceModel>> NewestThreeAssignmentsAsync()
         {
             return await repository
                 .AllReadOnly<Infrastructure.Data.Models.Assignment>()

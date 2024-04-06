@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskManagementSystem.Core.Contracts;
 using TaskManagementSystem.Core.Models.Assignee;
+using TaskManagementSystem.Extentions;
 
 namespace TaskManagementSystem.Controllers
 {
@@ -17,7 +18,15 @@ namespace TaskManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Become()
         {
+            if (await assigneeService.ExistByIdAsync(User.Id()))
+            {
+                return BadRequest();
+            }
+
+
+
             var model = new BecomeAssigneeFormModel();
+
             return View(model);
         }
 

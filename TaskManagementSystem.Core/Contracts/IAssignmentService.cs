@@ -4,6 +4,6 @@ namespace TaskManagementSystem.Core.Contracts
 {
     public interface IAssignmentService
     {
-        Task<IEnumerable<AssignmentIndexServiceModel>> NewestThreeAssignments();
+        Task<IEnumerable<AssignmentIndexServiceModel>> NewestThreeAssignmentsAsync();
     }
 }

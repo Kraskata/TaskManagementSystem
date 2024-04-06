@@ -23,7 +23,7 @@ namespace TaskManagementSystem.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var model = await assignmentService.NewestThreeAssignments();
+            var model = await assignmentService.NewestThreeAssignmentsAsync();
 
             return View(model);
         }

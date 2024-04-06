@@ -6,6 +6,7 @@ using static TaskManagementSystem.Infrastructure.Constants.DataConstants;
 
 namespace TaskManagementSystem.Infrastructure.Data.Models
 {
+    [Index(nameof(PhoneNumber), IsUnique = true)]
     public class Assignee
     {
         [Key]
