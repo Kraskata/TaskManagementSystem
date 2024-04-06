@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TaskManagementSystem.Core.Contracts;
 using TaskManagementSystem.Core.Models.Assignee;
-using TaskManagementSystem.Extentions;
 
 namespace TaskManagementSystem.Controllers
 {
