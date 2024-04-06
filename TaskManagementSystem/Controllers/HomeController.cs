@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TaskManagementSystem.Core.Contracts.Assignment;
+using TaskManagementSystem.Core.Contracts;
 using TaskManagementSystem.Core.Models.Home;
 using TaskManagementSystem.Models;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TaskManagementSystem.Core.Contracts.Assignment;
-using TaskManagementSystem.Core.Services.Assignment;
+using TaskManagementSystem.Core.Contracts;
+using TaskManagementSystem.Core.Services;
 using TaskManagementSystem.Infrastructure.Data;
 using TaskManagementSystem.Infrastructure.Data.Common;
 

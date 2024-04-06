@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TaskManagementSystem.Core.Contracts.Assignment;
+using TaskManagementSystem.Core.Contracts;
 using TaskManagementSystem.Core.Models.Home;
 using TaskManagementSystem.Infrastructure.Data.Common;
 
-namespace TaskManagementSystem.Core.Services.Assignment
+namespace TaskManagementSystem.Core.Services
 {
     public class AssignmentService : IAssignmentService
     {

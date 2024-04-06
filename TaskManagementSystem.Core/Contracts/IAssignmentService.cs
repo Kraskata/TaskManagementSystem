@@ -1,6 +1,6 @@
 ﻿using TaskManagementSystem.Core.Models.Home;
 
-namespace TaskManagementSystem.Core.Contracts.Assignment
+namespace TaskManagementSystem.Core.Contracts
 {
     public interface IAssignmentService
     {
