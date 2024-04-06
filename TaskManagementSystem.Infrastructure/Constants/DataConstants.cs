@@ -12,9 +12,9 @@
 
         public const int AssignmentDescriptionMinLength = 50;
 
-        public const string AssignmentPaidMaximum = "1500";
+        public const string AssignmentPaidMaximum = "1500.00";
 
-        public const string AssignmentPaidMinimum = "150";
+        public const string AssignmentPaidMinimum = "150.00";
 
         public const int AssigneePhoneMaxLength = 15;
 
