@@ -9,5 +9,7 @@
         public const string PhoneExists = "Phone number already exists. Enter a different one.";
 
         public const string HasAssignments = "You should have not assignments to become an agent.";
+
+        public const string PricePaidIsValid = "Price paid upon completion must be between {1} and {2} leva.";
     }
 }

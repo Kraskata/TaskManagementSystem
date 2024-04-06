@@ -25,10 +25,16 @@ namespace TaskManagementSystem.Core.Services
             await repository.SaveChangesAsync();    
         }
 
-        public async Task<bool> ExistByIdAsync(string userId)
+        public async Task<bool> ExistsByIdAsync(string userId)
         {
             return await repository.AllReadOnly<Assignee>()
                 .AnyAsync(a => a.UserId == userId);
+        }
+
+        public async Task<int?> GetAgentIdASync(string userId)
+        {
+            return (await repository.AllReadOnly<Assignee>()
+                .FirstOrDefaultAsync(a => a.UserId == userId))?.Id;
         }
 
         public async Task<bool> UserHasAssignmentsAsync(string userId)

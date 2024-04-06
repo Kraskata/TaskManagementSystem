@@ -2,12 +2,14 @@
 {
     public interface IAssigneeService
     {
-        Task<bool> ExistByIdAsync(string userId);
+        Task<bool> ExistsByIdAsync(string userId);
 
         Task<bool> UserWithPhoneNumberExistAsync(string phoneNumber);
 
         Task<bool> UserHasAssignmentsAsync(string userId);
 
         Task CreateAsync(string userId, string phoneNumber);
+
+        Task<int?> GetAgentIdASync(string userId);
     }
 }

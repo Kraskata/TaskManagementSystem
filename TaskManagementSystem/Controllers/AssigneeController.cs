@@ -29,7 +29,7 @@ namespace TaskManagementSystem.Controllers
         [NotAnAssignee]
         public async Task<IActionResult> Become(BecomeAssigneeFormModel model)
         {
-            if (await assigneeService.UserWithPhoneNumberExistAsync(User.Id()))
+            if (await assigneeService.UserWithPhoneNumberExistAsync(model.PhoneNumber))
             {
                 ModelState.AddModelError(nameof(model.PhoneNumber), PhoneExists);
             }
