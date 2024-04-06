@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using TaskManagementSystem.Core.Contracts.Assignment;
 using TaskManagementSystem.Core.Models.Home;
 using TaskManagementSystem.Models;
 
@@ -8,15 +9,20 @@ namespace TaskManagementSystem.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IAssignmentService assignmentService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(
+            ILogger<HomeController> logger,
+            IAssignmentService _assignmentService)
         {
             _logger = logger;
+            assignmentService = _assignmentService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var model = new IndexViewModel();
+            var model = await assignmentService.NewestThreeAssignments();
+
             return View(model);
         }
 
