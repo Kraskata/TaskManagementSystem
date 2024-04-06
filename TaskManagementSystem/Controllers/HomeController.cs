@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using TaskManagementSystem.Core.Contracts;
 using TaskManagementSystem.Core.Models.Home;
@@ -6,7 +7,7 @@ using TaskManagementSystem.Models;
 
 namespace TaskManagementSystem.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IAssignmentService assignmentService;
@@ -19,6 +20,7 @@ namespace TaskManagementSystem.Controllers
             assignmentService = _assignmentService;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var model = await assignmentService.NewestThreeAssignments();
@@ -26,6 +28,7 @@ namespace TaskManagementSystem.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

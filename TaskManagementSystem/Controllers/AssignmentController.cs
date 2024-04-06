@@ -4,8 +4,7 @@ using TaskManagementSystem.Core.Models.Assignment;
 
 namespace TaskManagementSystem.Controllers
 {
-    [Authorize]
-    public class AssignmentController : Controller
+    public class AssignmentController : BaseController
     {
         [AllowAnonymous]
         [HttpGet]
