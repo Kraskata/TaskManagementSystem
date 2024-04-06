@@ -14,9 +14,15 @@ namespace TaskManagementSystem.Core.Services
             repository = _repository;
         }
 
-        public Task CreateAsync(string userId, string phoneNumber)
+        public async Task CreateAsync(string userId, string phoneNumber)
         {
-            throw new NotImplementedException();
+            await repository.AddAsync(new Assignee()
+            {
+                UserId = userId,
+                PhoneNumber = phoneNumber
+            });
+
+            await repository.SaveChangesAsync();    
         }
 
         public async Task<bool> ExistByIdAsync(string userId)
@@ -25,14 +31,16 @@ namespace TaskManagementSystem.Core.Services
                 .AnyAsync(a => a.UserId == userId);
         }
 
-        public Task<bool> UserHasAssignmentsAsync(string userId)
+        public async Task<bool> UserHasAssignmentsAsync(string userId)
         {
-            throw new NotImplementedException();
+            return await repository.AllReadOnly<Assignment>()
+                .AnyAsync(a => a.WorkerId == userId);
         }
 
-        public Task<bool> UserWithPhoneNumberExistAsync(string phoneNumber)
+        public async Task<bool> UserWithPhoneNumberExistAsync(string phoneNumber)
         {
-            throw new NotImplementedException();
+            return await repository.AllReadOnly<Assignee>()
+                .AnyAsync(a => a.PhoneNumber == phoneNumber);
         }
     }
 }
