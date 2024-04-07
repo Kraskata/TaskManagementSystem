@@ -143,10 +143,55 @@ namespace TaskManagementSystem.Core.Services
             return assignment.Id;
         }
 
+        public async Task EditAsync(int assignmentId, AssignmentFormModel model)
+        {
+            var assignment = await repository.GetByIdAsync<Assignment>(assignmentId);
+
+            if (assignment != null)
+            {
+                assignment.Description = model.Description;
+                assignment.CategoryId = model.CategoryId;
+                assignment.Title = model.Title;
+                assignment.Paid = model.Paid;
+                assignment.DoneBy = model.DoneBy;
+
+                await repository.SaveChangesAsync();
+            }
+        }
+
         public async Task<bool> ExistsAsync(int id)
         {
             return await repository.AllReadOnly<Assignment>()
                 .AnyAsync(a => a.Id == id);
+        }
+
+        public async Task<AssignmentFormModel?> GetAssignmentFormModelByIdAsync(int id)
+        {
+            var assignment = await repository.AllReadOnly<Assignment>()
+                .Where(a => a.Id == id)
+                .Select(a => new AssignmentFormModel()
+                {
+                    DoneBy = a.DoneBy,
+                    Paid = a.Paid,
+                    Title = a.Title,
+                    Description = a.Description,
+                    CategoryId = a.CategoryId
+
+                })
+                .FirstOrDefaultAsync();
+
+            if (assignment != null)
+            {
+                assignment.Categories = await AllCategoriesAsync();
+            }
+
+            return assignment;
+        }
+
+        public async Task<bool> HasAssigneeWithIdAsync(int assignmentId, string userId)
+        {
+            return await repository.AllReadOnly<Assignment>()
+                .AnyAsync(a => a.Id == assignmentId && a.Assignee.UserId == userId);
         }
 
         public async Task<IEnumerable<AssignmentIndexServiceModel>> NewestFourAssignmentsAsync()

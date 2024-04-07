@@ -93,7 +93,7 @@ namespace TaskManagementSystem.Controllers
         {
             if (await assignmentService.CategoryExistsAsync(model.CategoryId) == false)
             {
-                ModelState.AddModelError(nameof(model.CategoryId), "");
+                ModelState.AddModelError(nameof(model.CategoryId), "Category does not exist.");
             }
 
             if (ModelState.IsValid == false)
@@ -113,8 +113,49 @@ namespace TaskManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var model = new AssignmentFormModel();
+            if (!await assignmentService.ExistsAsync(id))
+            {
+                return BadRequest();
+            }
+
+            if (!await assignmentService.HasAssigneeWithIdAsync(id, User.Id()))
+            {
+                return Unauthorized();
+            }
+
+            var model = await assignmentService.GetAssignmentFormModelByIdAsync(id);
+
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, AssignmentFormModel model)
+        {
+            if (!await assignmentService.ExistsAsync(id))
+            {
+                return BadRequest();
+            }
+
+            if (!await assignmentService.HasAssigneeWithIdAsync(id, User.Id()))
+            {
+                return Unauthorized();
+            }
+
+            if (await assignmentService.CategoryExistsAsync(model.CategoryId) == false)
+            {
+                ModelState.AddModelError(nameof(model.CategoryId), "Category does not exist.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Categories = await assignmentService.AllCategoriesAsync();
+
+                return View(model);
+            }
+
+            await assignmentService.EditAsync(id, model);
+
+            return RedirectToAction(nameof(Details), new {id});
         }
 
         [HttpPost]
