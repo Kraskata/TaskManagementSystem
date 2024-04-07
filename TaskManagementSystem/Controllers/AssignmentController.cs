@@ -22,10 +22,19 @@ namespace TaskManagementSystem.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery]AllAssignmentsQueryModel query)
         {
-            var model = new AllAssignmentsQueryModel();
-            return View(model);
+            var model = await assignmentService.AllAsync(
+                query.Category,
+                query.SearchItem,
+                query.Sorting,
+                query.CurrentPage,
+                query.AssignmentsPerPage);
+
+            query.TotalAssignmentsCount = model.TotalAssignmentsCount;
+            query.Assignments = model.Assignments;
+            query.Categories = await assignmentService.AllCategoriesNamesAsync();
+            return View(query);
         }
 
         [HttpGet]

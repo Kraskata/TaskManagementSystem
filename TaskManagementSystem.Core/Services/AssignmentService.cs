@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskManagementSystem.Core.Contracts;
+using TaskManagementSystem.Core.Enumerations;
 using TaskManagementSystem.Core.Models.Assignment;
 using TaskManagementSystem.Core.Models.Home;
 using TaskManagementSystem.Infrastructure.Data.Common;
@@ -16,6 +17,59 @@ namespace TaskManagementSystem.Core.Services
             repository = _repository;
         }
 
+        public async Task<AssignmentQueryServiceModel> AllAsync(string? category = null, string? searchItem = null, AssignmentSorting sorting = AssignmentSorting.Newest, int currentPage = 1, int assignmentsPerPage = 4)
+        {
+            var assignmentsToShow = repository.AllReadOnly<Assignment>();
+
+            if (category != null)
+            {
+                assignmentsToShow = assignmentsToShow
+                    .Where(h => h.Category.Name == category);
+            }
+
+            if (searchItem != null)
+            {
+                string normalizedSearchItem = searchItem.ToLower();
+                assignmentsToShow = assignmentsToShow
+                    .Where(a => (a.Title.ToLower().Contains(normalizedSearchItem) ||
+                                 a.Description.ToLower().Contains(normalizedSearchItem)));
+            }
+
+            assignmentsToShow = sorting switch
+            {
+                AssignmentSorting.Paid =>assignmentsToShow.OrderBy(a => a.Paid),
+
+                AssignmentSorting.NotAssignedFirst => assignmentsToShow
+                    .OrderBy(a => a.WorkerId != null)
+                    .ThenByDescending(a => a.Id),
+
+                _ => assignmentsToShow
+                    .OrderByDescending(a => a.Id)
+            };
+
+            var assignments = await assignmentsToShow
+                .Skip((currentPage - 1) * assignmentsPerPage)
+                .Take(assignmentsPerPage)
+                .Select(a => new AssignmentServiceModel()
+                {
+                    Id = a.Id,
+                    Title = a.Title,
+                    Description = a.Description,
+                    DoneBy = a.DoneBy,
+                    IsAssigned = a.WorkerId != null,
+                    Paid = a.Paid
+                })
+                .ToListAsync();
+
+            int totalAssignments = await assignmentsToShow.CountAsync();
+
+            return new AssignmentQueryServiceModel()
+            {
+                Assignments = assignments,
+                TotalAssignmentsCount = totalAssignments,
+            };
+        }
+
         public async Task<IEnumerable<AssignmentCategoryServiceModel>> AllCategoriesAsync()
         {
             return await repository.AllReadOnly<Category>()
@@ -24,6 +78,14 @@ namespace TaskManagementSystem.Core.Services
                     Id = c.Id,
                     Name = c.Name,
                 })
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<string>> AllCategoriesNamesAsync()
+        {
+            return await repository.AllReadOnly<Category>()
+                .Select(c => c.Name)
+                .Distinct()
                 .ToListAsync();
         }
 
