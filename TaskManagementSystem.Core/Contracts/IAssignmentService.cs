@@ -36,5 +36,15 @@ namespace TaskManagementSystem.Core.Contracts
         Task<bool> HasAssigneeWithIdAsync(int assignmentId, string userId);
 
         Task<AssignmentFormModel?> GetAssignmentFormModelByIdAsync(int id);
+
+        Task DeleteAsync(int assignmentId);
+
+        Task<bool> IsAssignedAsync(int assignmentId);
+
+        Task<bool> IsAssignedByIUserWithIdAsync(int assignmentId, string userId);
+
+        Task AssignAsync(int id, string userId);
+
+        Task LeaveAsync(int assignmentId, string userId);
     }
 }

@@ -5,6 +5,7 @@ using TaskManagementSystem.Core.Models.Assignment;
 using TaskManagementSystem.Core.Models.Home;
 using TaskManagementSystem.Infrastructure.Data.Common;
 using TaskManagementSystem.Infrastructure.Data.Models;
+using TaskManagementSystem.Core.Exceptions;
 
 namespace TaskManagementSystem.Core.Services
 {
@@ -97,6 +98,17 @@ namespace TaskManagementSystem.Core.Services
                 .ToListAsync();
         }
 
+        public async Task AssignAsync(int id, string userId)
+        {
+            var assignment = await repository.GetByIdAsync<Assignment>(id);
+
+            if (assignment != null)
+            {
+                assignment.WorkerId = userId;
+                await repository.SaveChangesAsync();
+            }
+        }
+
         public async Task<AssignmentDetailsServiceModel> AssignmentDetailsByIdAsync(int id)
         {
             return await repository.AllReadOnly<Assignment>()
@@ -141,6 +153,12 @@ namespace TaskManagementSystem.Core.Services
             await repository.SaveChangesAsync();
 
             return assignment.Id;
+        }
+
+        public async Task DeleteAsync(int houseId)
+        {
+            await repository.DeleteAsync<Assignment>(houseId);
+            await repository.SaveChangesAsync();
         }
 
         public async Task EditAsync(int assignmentId, AssignmentFormModel model)
@@ -192,6 +210,53 @@ namespace TaskManagementSystem.Core.Services
         {
             return await repository.AllReadOnly<Assignment>()
                 .AnyAsync(a => a.Id == assignmentId && a.Assignee.UserId == userId);
+        }
+
+        public async Task<bool> IsAssignedAsync(int assignmentId)
+        {
+            bool result = false;
+            var assignment = await repository.GetByIdAsync<Assignment>(assignmentId);
+
+            if (assignment != null)
+            {
+                result = assignment.WorkerId != null;
+            }
+
+            return result;
+        }
+
+        public async Task<bool> IsRentedByIUserWithIdAsync(int assignmentId, string userId)
+        {
+            bool result = false;
+            var assignment = await repository.GetByIdAsync<Assignment>(assignmentId);
+
+            if (assignment != null)
+            {
+                result = assignment.WorkerId == userId;
+            }
+
+            return result;
+        }
+
+        public Task<bool> IsAssignedByIUserWithIdAsync(int assignmentId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task LeaveAsync(int assignmentId, string userId)
+        {
+            var assignment = await repository.GetByIdAsync<Assignment>(assignmentId);
+
+            if (assignment != null)
+            {
+                if (assignment.WorkerId != userId)
+                {
+                    throw new UnauthorizedActionException("The user is not the renter");
+                }
+
+                assignment.WorkerId = null;
+                await repository.SaveChangesAsync();
+            }
         }
 
         public async Task<IEnumerable<AssignmentIndexServiceModel>> NewestFourAssignmentsAsync()
