@@ -1,7 +1,7 @@
 ﻿@model AssignmentServiceModel
 
 <div class="col-md-4">
-    <div class="card mb-3">
+    <div style="background-color:#ff8c8c" class="card mb-3">
         <div class="card-body text-center">
             <h4>@Model.Title</h4>
             <h6>Description: <b>@Model.Description</b></h6>
@@ -12,26 +12,26 @@
             <h6>(@(Model.IsAssigned ? "Assigned" : "Not Assigned"))</h6>
             <br />
             <a asp-controller="Assignment" asp-action="Details" asp-route-id="@Model.Id"
-               class="btn btn-success">Details</a>
+               class="btn btn-success" style="background:#3630a3;color:white;">Details</a>
             @if (this.User.Identity.IsAuthenticated)
             {
                 <a asp-controller="Assignment" asp-action="Edit" asp-route-id="@Model.Id"
-               class="btn btn-warning">Edit</a>
+               class="btn btn-warning" style="background:#f58442;color:#ffd94f;">Edit</a>
                 <a asp-controller="Assignment" asp-action="Delete" asp-route-id="@Model.Id"
-               class="btn btn-danger">Delete</a>
+               class="btn btn-danger" style="background:#940000;color:#ff4d4d;">Delete</a>
                 <p></p>
                 @if (!Model.IsAssigned)
                 {
                     <form class="input-group-sm" asp-controller="Assignment"
                   asp-action="Accept" asp-route-id="@Model.Id" method="post">
-                        <input class="btn btn-primary" type="submit" value="Accept" />
+                        <input style="background:#00ff11;color:#005c06;" class="btn btn-primary" type="submit" value="Accept" />
                     </form>
                 }
                 else
                 {
                     <form asp-controller="Assignment" asp-action="Leave"
                   asp-route-id="@Model.Id" method="post">
-                        <input class="btn btn-primary" type="submit" value="Leave" />
+                        <input style="background:#000000;color:#ffffff;" class="btn btn-primary" type="submit" value="Leave" />
                     </form>
                 }
             }

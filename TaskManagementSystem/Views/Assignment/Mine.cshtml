@@ -1,7 +1,20 @@
-﻿@model AllAssignmentsQueryModel
+﻿@model IEnumerable<AssignmentServiceModel>
+
 @{
-	ViewBag.Title = "My Assignments";
+    ViewData["Title"] = "My Assignments";
 }
 
-<h2 class="text-center">@ViewBag.Title</h2>
+<h2 class="text-center">@ViewData["Title"]</h2>
 <hr />
+
+@if (Model.Any() == false)
+{
+    <h3 class="text-center">You have no assignments yet!</h3>
+}
+
+<div class="row">
+    @foreach (var assignment in Model)
+    {
+        <partial name="_AssignmentPartial" model="@assignment" />
+    }
+</div>

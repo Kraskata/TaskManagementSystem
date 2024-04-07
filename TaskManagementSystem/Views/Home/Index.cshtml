@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Home Page";
     var assignments = Model.ToList();
+    //style="margin: auto; width: 50%; border: 3px solid black; padding: 10px;" 
 }
 
 <style>
@@ -13,6 +14,8 @@
         margin: 10px;
         width: 300px;
         display: inline-block;
+        background-color: #ff8c8c;
+        font-family: "Lucida Console", "Courier New", monospace;
     }
 
     .card h3 {
@@ -21,14 +24,6 @@
 
     .card p {
         margin-bottom: 5px;
-    }
-
-    .card .completed {
-        color: green;
-    }
-
-    .card .not-completed {
-        color: red;
     }
 </style>
 
@@ -55,8 +50,9 @@
         {
             var assignment = assignments[i];
             <div class="card">
-                        <a class="btn btn-primary" asp-controller="Assignment" asp-action="Details"
-                       asp-route-id="@assignment.Id"> @assignment.Title</a>
+                <div style="margin: auto; width: 100%; border: 3px solid black; padding: 5px; background-color: gray"> 
+                        <a style="margin: auto; width: 100%;" class="btn btn-secondary" asp-controller="Assignment" asp-action="Details"
+                       asp-route-id="@assignment.Id"> @assignment.Title</a> </div>
                 <p>@assignment.Description</p>
                 <p>Category: @assignment.Category.Name</p>
             </div>
