@@ -40,7 +40,19 @@ namespace TaskManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Mine()
         {
-            var model = new AllAssignmentsQueryModel();
+            var userId = User.Id();
+            IEnumerable<AssignmentServiceModel> model;
+
+            if (await assigneeService.ExistsByIdAsync(userId))
+            {
+                int assigneeId = await assigneeService.GetAssigneeIdAsync(userId) ?? 0;
+
+                model = await assignmentService.AllAssignmentsByAssigneeIdAsync(assigneeId);
+            }
+            else
+            {
+                model = await assignmentService.AllAssignmentsByUserId(userId);
+            }
 
             return View(model);
         }
@@ -48,7 +60,12 @@ namespace TaskManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var model = new AssignmentDetailsViewModel();
+            if (await assignmentService.ExistsAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
+            var model = await assignmentService.AssignmentDetailsByIdAsync(id);
 
             return View(model);
         }
@@ -86,7 +103,7 @@ namespace TaskManagementSystem.Controllers
                 return View(model);
             }
 
-            int? assigneeId = await assigneeService.GetAgentIdASync(User.Id());
+            int? assigneeId = await assigneeService.GetAssigneeIdAsync(User.Id());
 
             int newAssigneeId = await assignmentService.CreateAsync(model, assigneeId ?? 0);
 

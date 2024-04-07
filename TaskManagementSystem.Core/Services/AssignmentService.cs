@@ -17,6 +17,22 @@ namespace TaskManagementSystem.Core.Services
             repository = _repository;
         }
 
+        public async Task<IEnumerable<AssignmentServiceModel>> AllAssignmentsByAssigneeIdAsync(int assigneeId)
+        {
+            return await repository.AllReadOnly<Assignment>()
+                .Where(a => a.AssigneeId == assigneeId)
+                .ProjectToAssignmentServiceModel()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<AssignmentServiceModel>> AllAssignmentsByUserId(string userId)
+        {
+            return await repository.AllReadOnly<Assignment>()
+                .Where(a => a.WorkerId == userId)
+                .ProjectToAssignmentServiceModel()
+                .ToListAsync();
+        }
+
         public async Task<AssignmentQueryServiceModel> AllAsync(string? category = null, string? searchItem = null, AssignmentSorting sorting = AssignmentSorting.Newest, int currentPage = 1, int assignmentsPerPage = 4)
         {
             var assignmentsToShow = repository.AllReadOnly<Assignment>();
@@ -37,7 +53,7 @@ namespace TaskManagementSystem.Core.Services
 
             assignmentsToShow = sorting switch
             {
-                AssignmentSorting.Paid =>assignmentsToShow.OrderBy(a => a.Paid),
+                AssignmentSorting.Paid =>assignmentsToShow.OrderByDescending(a => a.Paid),
 
                 AssignmentSorting.NotAssignedFirst => assignmentsToShow
                     .OrderBy(a => a.WorkerId != null)
@@ -50,15 +66,7 @@ namespace TaskManagementSystem.Core.Services
             var assignments = await assignmentsToShow
                 .Skip((currentPage - 1) * assignmentsPerPage)
                 .Take(assignmentsPerPage)
-                .Select(a => new AssignmentServiceModel()
-                {
-                    Id = a.Id,
-                    Title = a.Title,
-                    Description = a.Description,
-                    DoneBy = a.DoneBy,
-                    IsAssigned = a.WorkerId != null,
-                    Paid = a.Paid
-                })
+                .ProjectToAssignmentServiceModel()
                 .ToListAsync();
 
             int totalAssignments = await assignmentsToShow.CountAsync();
@@ -89,6 +97,29 @@ namespace TaskManagementSystem.Core.Services
                 .ToListAsync();
         }
 
+        public async Task<AssignmentDetailsServiceModel> AssignmentDetailsByIdAsync(int id)
+        {
+            return await repository.AllReadOnly<Assignment>()
+                .Where(a => a.Id == id)
+                .Select(a => new AssignmentDetailsServiceModel()
+                {
+                    Id = a.Id,
+                    Description = a.Description,
+                    Assignee = new Models.Assignee.AssigneeServiceModel()
+                    {
+                        Gmail = a.Assignee.User.Email,
+                        PhoneNumber = a.Assignee.PhoneNumber
+                    },
+                    Category = a.Category.Name,
+                    IsAssigned = a.WorkerId != null,
+                    Paid = a.Paid,
+                    DoneBy = a.DoneBy,
+                    Title = a.Title
+                    
+                })
+                .FirstAsync();
+        }
+
         public async Task<bool> CategoryExistsAsync(int categoryId)
         {
             return await repository.AllReadOnly<Category>()
@@ -112,12 +143,18 @@ namespace TaskManagementSystem.Core.Services
             return assignment.Id;
         }
 
-        public async Task<IEnumerable<AssignmentIndexServiceModel>> NewestThreeAssignmentsAsync()
+        public async Task<bool> ExistsAsync(int id)
+        {
+            return await repository.AllReadOnly<Assignment>()
+                .AnyAsync(a => a.Id == id);
+        }
+
+        public async Task<IEnumerable<AssignmentIndexServiceModel>> NewestFourAssignmentsAsync()
         {
             return await repository
                 .AllReadOnly<Infrastructure.Data.Models.Assignment>()
                 .OrderBy(a => a.Id)
-                .Take(3)
+                .Take(4)
                 .Select(a => new AssignmentIndexServiceModel()
                 {
                     Id = a.Id,
@@ -127,5 +164,7 @@ namespace TaskManagementSystem.Core.Services
                 })
                 .ToListAsync();
         }
+
+
     }
 }

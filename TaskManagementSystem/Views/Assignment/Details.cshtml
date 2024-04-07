@@ -1,7 +1,95 @@
-﻿@model AssignmentDetailsViewModel
+﻿@model AssignmentDetailsServiceModel
+
 @{
-	ViewBag.Title = "Assignment Details";
+    ViewBag.Title = "Assignment Details";
 }
+
+<style>
+    .card {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        border-color: black;
+        display: inline-block;
+        background-color: #ff8c8c;
+        font-family: "Lucida Console", "Courier New", monospace;
+        text-align:center;
+        margin: auto;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .assigneeCard {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        border-color: black;
+        display: inline-block;
+        background-color: #ff8c8c;
+        font-family: "Lucida Console", "Courier New", monospace;
+        text-align:center;
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+    }
+
+    .card h3 {
+        margin-top: 0;
+        text-align:center;
+        font-size:35px;
+    }
+
+    .card p {
+        margin-bottom: 10px;
+        text-align:center;
+        font-size:20px;
+    }
+</style>
 
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
+
+<div class="container">
+    <div class="row">
+        <div class="card col-8 border-0">
+            <h3><u>@Model.Title</u></h3>
+            <p>
+                Price Paid Upon Completion:
+                <b>@String.Format("{0:f2}", Model.Paid) BGN</b>
+            </p>
+            <p>@Model.Description</p>
+            <p><b>Due Date: @Model.DoneBy</b></p>
+            <p>Category: <b>@Model.Category</b></p>
+            <p><i>(@(Model.IsAssigned ? "Assigned" : "Not Assigned"))</i></p>
+            <div class="form-inline">
+                @if (this.User.Identity.IsAuthenticated)
+                {
+                    <a class="btn btn-warning" asp-controller="Assignment" asp-action="Edit"
+                       asp-route-id="@Model.Id" style="background:#f58442;color:#ffd94f;">Edit</a>
+                    <a class="ml-2 btn btn-danger" asp-controller="Assignment" asp-action="Delete"
+                       asp-route-id="@Model.Id" style="background:#940000;color:#ff4d4d;">Delete</a>
+                    @if (!Model.IsAssigned)
+                    {
+                        <form class="ml-2" asp-controller="Assignment"
+                              asp-action="Accept" asp-route-id="@Model.Id" method="post">
+                            <input style="background:#00ff11;color:#005c06;" class="btn btn-primary" type="submit" value="Accept" />
+                        </form>
+                    }
+                    else
+                    {
+                        <form class="ml-2" asp-controller="Assignment" asp-action="Leave"
+                              asp-route-id="@Model.Id" method="post">
+                            <input style="background:#000000;color:#ffffff;" class="btn btn-primary" type="submit" value="Leave" />
+                        </form>
+                    }
+                }
+            </div>
+            <p></p>
+            <div style="align-text:right" class="assigneeCard" style="width: 18rem; ">
+                <div class="card-body">
+                    <h5 class="card-title">Assignee Info</h5>
+                    <p class="card-text">Email:  @Model.Assignee.Gmail</p>
+                    <p class="card-text">Phone Number: @Model.Assignee.PhoneNumber</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

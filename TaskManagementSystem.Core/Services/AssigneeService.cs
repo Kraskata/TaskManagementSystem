@@ -31,7 +31,7 @@ namespace TaskManagementSystem.Core.Services
                 .AnyAsync(a => a.UserId == userId);
         }
 
-        public async Task<int?> GetAgentIdASync(string userId)
+        public async Task<int?> GetAssigneeIdAsync(string userId)
         {
             return (await repository.AllReadOnly<Assignee>()
                 .FirstOrDefaultAsync(a => a.UserId == userId))?.Id;

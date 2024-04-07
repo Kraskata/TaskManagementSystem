@@ -6,7 +6,7 @@ namespace TaskManagementSystem.Core.Contracts
 {
     public interface IAssignmentService
     {
-        Task<IEnumerable<AssignmentIndexServiceModel>> NewestThreeAssignmentsAsync();
+        Task<IEnumerable<AssignmentIndexServiceModel>> NewestFourAssignmentsAsync();
 
         Task<IEnumerable<AssignmentCategoryServiceModel>> AllCategoriesAsync();
 
@@ -22,5 +22,13 @@ namespace TaskManagementSystem.Core.Contracts
             int assignmentsPerPage = 4);
 
         Task<IEnumerable<string>> AllCategoriesNamesAsync();
+
+        Task<IEnumerable<AssignmentServiceModel>> AllAssignmentsByAssigneeIdAsync(int assigneeId);
+
+        Task<IEnumerable<AssignmentServiceModel>> AllAssignmentsByUserId(string userId);
+
+        Task<bool> ExistsAsync(int id);
+
+        Task<AssignmentDetailsServiceModel> AssignmentDetailsByIdAsync(int id);
     }
 }
