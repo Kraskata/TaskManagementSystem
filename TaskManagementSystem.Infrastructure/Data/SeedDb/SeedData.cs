@@ -5,9 +5,9 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
 {
     internal class SeedData
     {
-        public IdentityUser AssigneeUser { get; set; }
+        public ApplicationUser AssigneeUser { get; set; }
 
-        public IdentityUser GuestUser { get; set; }
+        public ApplicationUser GuestUser { get; set; }
 
         public Assignee Assignee { get; set; }
 
@@ -33,9 +33,9 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
 
         private void SeedUsers()
         {
-            var hasher = new PasswordHasher<IdentityUser>();
+            var hasher = new PasswordHasher<ApplicationUser>();
 
-            AssigneeUser = new IdentityUser()
+            AssigneeUser = new ApplicationUser()
             {
                 Id = "dea12856-c198-4129-b3f3-b893d8395082",
                 UserName = "agent@mail.com",
@@ -47,7 +47,7 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
             AssigneeUser.PasswordHash =
                  hasher.HashPassword(AssigneeUser, "agent123");
 
-            GuestUser = new IdentityUser()
+            GuestUser = new ApplicationUser()
             {
                 Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                 UserName = "guest@mail.com",

@@ -23,5 +23,9 @@
         public const string GmailRegex = "^[\\w.+\\-]+@gmail\\.com$";
 
         public const string DateFormatString = "mm/dd/yyyy";
+
+        public const int UserFirstNameMaxLength = 25;
+
+        public const int UserLastNameMaxLength = 35;
     }
 }

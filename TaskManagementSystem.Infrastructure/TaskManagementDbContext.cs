@@ -5,7 +5,7 @@ using TaskManagementSystem.Infrastructure.Data.SeedDb;
 
 namespace TaskManagementSystem.Infrastructure.Data
 {
-    public class TaskManagementDbContext : IdentityDbContext
+    public class TaskManagementDbContext : IdentityDbContext<ApplicationUser>
     {
         public TaskManagementDbContext(DbContextOptions<TaskManagementDbContext> options)
             : base(options)
