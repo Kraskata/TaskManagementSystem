@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using TaskManagementSystem.Infrastructure.Data.Models;
 using static TaskManagementSystem.Infrastructure.Constants.DataConstants;
+using static TaskManagementSystem.Core.Constants.CustomClaims;
 
 namespace TaskManagementSystem.Areas.Identity.Pages.Account
 {
@@ -129,6 +130,8 @@ namespace TaskManagementSystem.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim(UserFullNameClaim, $"{user.FirstName} {user.LastName}"));
+
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
