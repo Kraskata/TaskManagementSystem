@@ -13,6 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<IAssignmentService, AssignmentService>();
             services.AddScoped<IAssigneeService, AssigneeService>();
+            services.AddScoped<IStatisticService, StatisticService>();
 
             return services;
         }
