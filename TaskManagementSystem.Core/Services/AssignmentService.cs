@@ -119,6 +119,7 @@ namespace TaskManagementSystem.Core.Services
                     Description = a.Description,
                     Assignee = new Models.Assignee.AssigneeServiceModel()
                     {
+                        FullName = $"{a.Assignee.User.FirstName} {a.Assignee.User.LastName}",
                         Gmail = a.Assignee.User.Email,
                         PhoneNumber = a.Assignee.PhoneNumber
                     },
