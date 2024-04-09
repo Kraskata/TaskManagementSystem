@@ -1,4 +1,6 @@
 ﻿@model AssignmentDetailsServiceModel
+@inject IAssigneeService assigneeService
+@inject IAssignmentService assignmentService
 
 @{
     ViewBag.Title = "Assignment Details";
@@ -6,9 +8,7 @@
 
 <style>
     .card {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        border-color: black;
+        border-radius: 20px;
         display: inline-block;
         background-color: #ff8c8c;
         font-family: "Lucida Console", "Courier New", monospace;
@@ -19,9 +19,8 @@
     }
 
     .assigneeCard {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        border-color: black;
+        border: 1px solid black;
+        border-radius: 10px;
         display: inline-block;
         background-color: #ff8c8c;
         font-family: "Lucida Console", "Courier New", monospace;
@@ -62,18 +61,21 @@
             <div class="form-inline">
                 @if (this.User.Identity.IsAuthenticated)
                 {
-                    <a class="btn btn-warning" asp-controller="Assignment" asp-action="Edit"
+                    if (await assignmentService.HasAssigneeWithIdAsync(Model.Id, User.Id()))
+                    {
+                                            <a class="btn btn-warning" asp-controller="Assignment" asp-action="Edit"
                        asp-route-id="@Model.Id" style="background:#f58442;color:#ffd94f;">Edit</a>
                     <a class="ml-2 btn btn-danger" asp-controller="Assignment" asp-action="Delete"
                        asp-route-id="@Model.Id" style="background:#940000;color:#ff4d4d;">Delete</a>
-                    @if (!Model.IsAssigned)
+                    }
+                    @if (!Model.IsAssigned &&  (await assigneeService.ExistsByIdAsync(User.Id())) == false)
                     {
                         <form class="ml-2" asp-controller="Assignment"
                               asp-action="Accept" asp-route-id="@Model.Id" method="post">
                             <input style="background:#00ff11;color:#005c06;" class="btn btn-primary" type="submit" value="Accept" />
                         </form>
                     }
-                    else
+                    else if(await assignmentService.IsAcceptedByUserWithIdAsync(Model.Id, User.Id()))
                     {
                         <form class="ml-2" asp-controller="Assignment" asp-action="Leave"
                               asp-route-id="@Model.Id" method="post">
@@ -83,11 +85,12 @@
                 }
             </div>
             <p></p>
-            <div style="align-text:right" class="assigneeCard" style="width: 18rem; ">
+            <div style="align-text:right; background-color:#ff6b6b" class="assigneeCard" style="width: 18rem; ">
                 <div class="card-body">
                     <h5 class="card-title">Assignee Info</h5>
                     <p class="card-text">Email:  @Model.Assignee.Gmail</p>
                     <p class="card-text">Phone Number: @Model.Assignee.PhoneNumber</p>
+                    <p class="card-text">Assigned On: @Model.Assigned</p>
                 </div>
             </div>
         </div>

@@ -34,7 +34,9 @@ namespace TaskManagementSystem.Core.Models.Assignment
         public IEnumerable<AssignmentCategoryServiceModel> Categories { get; set; } = new List<AssignmentCategoryServiceModel>();
 
         [Required(ErrorMessage = RequiredMessage)]
-        [Display(Name = "Is Assigned")]
+        [Display(Name = "When is the final date for completion")]
         public string DoneBy { get; set; } = null!;
+
+        public string Assigned { get; set; } = DateTime.Now.Date.ToShortDateString() + " " + DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
     }
 }

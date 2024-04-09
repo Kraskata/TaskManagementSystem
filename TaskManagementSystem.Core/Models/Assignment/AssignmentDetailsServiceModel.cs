@@ -12,5 +12,7 @@ namespace TaskManagementSystem.Core.Models.Assignment
         public string Category { get; set; } = null!;
 
         public AssigneeServiceModel Assignee { get; set; } = null!;
+
+        public string Assigned { get; set; } = null!;
     }
 }

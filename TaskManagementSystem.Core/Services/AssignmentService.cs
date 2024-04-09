@@ -126,6 +126,7 @@ namespace TaskManagementSystem.Core.Services
                     IsAssigned = a.WorkerId != null,
                     Paid = a.Paid,
                     DoneBy = a.DoneBy,
+                    Assigned = a.Assigned,
                     Title = a.Title
                     
                 })
@@ -148,6 +149,7 @@ namespace TaskManagementSystem.Core.Services
                 Paid = model.Paid,
                 Title = model.Title,
                 DoneBy = model.DoneBy,
+                Assigned = model.Assigned
             };
             await repository.AddAsync(assignment);
             await repository.SaveChangesAsync();
@@ -171,6 +173,7 @@ namespace TaskManagementSystem.Core.Services
                 assignment.CategoryId = model.CategoryId;
                 assignment.Title = model.Title;
                 assignment.Paid = model.Paid;
+                assignment.Assigned = model.Assigned;
                 assignment.DoneBy = model.DoneBy;
 
                 await repository.SaveChangesAsync();
