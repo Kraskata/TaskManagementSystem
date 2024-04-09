@@ -4,6 +4,7 @@ using System.Security.Claims;
 using TaskManagementSystem.Attribute;
 using TaskManagementSystem.Core.Contracts;
 using TaskManagementSystem.Core.Exceptions;
+using TaskManagementSystem.Core.Extentions;
 using TaskManagementSystem.Core.Models.Assignment;
 
 namespace TaskManagementSystem.Controllers
@@ -64,7 +65,7 @@ namespace TaskManagementSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id, string information)
         {
             if (await assignmentService.ExistsAsync(id) == false)
             {
@@ -72,6 +73,11 @@ namespace TaskManagementSystem.Controllers
             }
 
             var model = await assignmentService.AssignmentDetailsByIdAsync(id);
+
+            if (information != model.GetInformation())
+            {
+                return BadRequest();
+            }
 
             return View(model);
         }
@@ -113,7 +119,7 @@ namespace TaskManagementSystem.Controllers
 
             int newAssigneeId = await assignmentService.CreateAsync(model, assigneeId ?? 0);
 
-            return RedirectToAction(nameof(Details), new { id = newAssigneeId });
+            return RedirectToAction(nameof(Details), new { id = newAssigneeId , information = model.GetInformation()});
         }
 
         [HttpGet]
@@ -161,7 +167,7 @@ namespace TaskManagementSystem.Controllers
 
             await assignmentService.EditAsync(id, model);
 
-            return RedirectToAction(nameof(Details), new {id});
+            return RedirectToAction(nameof(Details), new { id, information = model.GetInformation() });
         }
 
         [AllowAnonymous]
@@ -246,7 +252,7 @@ namespace TaskManagementSystem.Controllers
             }
             catch (UnauthorizedActionException uae)
             {
-                logger.LogError(uae, "HouseController/Leave");
+                logger.LogError(uae, "AssignmentController/Leave");
 
                 return Unauthorized();
             }

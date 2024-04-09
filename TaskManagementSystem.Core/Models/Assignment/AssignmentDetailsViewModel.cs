@@ -1,6 +1,8 @@
-﻿namespace TaskManagementSystem.Core.Models.Assignment
+﻿using TaskManagementSystem.Core.Contracts;
+
+namespace TaskManagementSystem.Core.Models.Assignment
 {
-    public class AssignmentDetailsViewModel
+    public class AssignmentDetailsViewModel : IAssignmentModel
     {
         public int Id { get; set; }
 

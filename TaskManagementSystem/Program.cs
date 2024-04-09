@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using TaskManagementSystem.ModelBinders;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ builder.Services.AddApplicationIdentity(builder.Configuration);
 builder.Services.AddControllersWithViews(options =>
 {
     options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
 });
 
 builder.Services.AddApplicationServices();
@@ -35,7 +37,15 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapDefaultControllerRoute();
-app.MapRazorPages();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapDefaultControllerRoute();
+    endpoints.MapRazorPages();
+    endpoints.MapControllerRoute(
+        name: "Assignment Details",
+        pattern: "/Assignment/Details/{id}/{information}",
+        defaults: new {Controller = "Assignment", Action = "Details"}
+        );
+});
 
 await app.RunAsync();

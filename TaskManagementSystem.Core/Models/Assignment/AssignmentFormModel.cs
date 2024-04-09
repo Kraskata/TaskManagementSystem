@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TaskManagementSystem.Core.Contracts;
 using static TaskManagementSystem.Core.Constants.MessageConstants;
 using static TaskManagementSystem.Infrastructure.Constants.DataConstants;
 
 namespace TaskManagementSystem.Core.Models.Assignment
 {
-    public class AssignmentFormModel
+    public class AssignmentFormModel : IAssignmentModel
     {
         [Required(ErrorMessage = RequiredMessage)]
         [StringLength(AssignmentTitleMaxLength,

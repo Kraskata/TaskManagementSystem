@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Home Page";
     var assignments = Model.ToList();
-    //style="margin: auto; width: 50%; border: 3px solid black; padding: 10px;" 
 }
 
 <style>
@@ -25,12 +24,23 @@
     .card p {
         margin-bottom: 5px;
     }
+
+    h2{
+        margin: auto;
+        font-family: Lucida Console, Courier New, monospace;
+        background-color: gray;
+        border: 2px solid #ccc;
+        display:table;
+    }
 </style>
+
+<div class="mt-4 p-5">
+    <h4 style="font-family: Lucida Console, Courier New, monospace; text-align:center;" class="display-4">Here are the newest tasks available.</h4>
+</div>
 
 @if (!assignments.Any())
 {
-    <div class="mt-4 p-5 bg-light">
-        <h1 class="display-4">Here are the newest tasks available.</h1>
+    <div class="mt-4 p-5">
         <p class="lead">
             There are no assignments assigned. 
             In case you need to assign one feel free to do so.
@@ -45,16 +55,42 @@
     </div>
 }
 
-    <div>
-        @for (int i = 0; i < assignments.Count(); i++)
-        {
-            var assignment = assignments[i];
-            <div class="card">
-                <div style="margin: auto; width: 100%; border: 3px solid black; padding: 5px; background-color: gray"> 
-                        <a style="margin: auto; width: 100%;" class="btn btn-secondary" asp-controller="Assignment" asp-action="Details"
-                       asp-route-id="@assignment.Id"> @assignment.Title</a> </div>
-                <p>@assignment.Description</p>
-                <p>Category: @assignment.Category.Name</p>
-            </div>
-        }
+<div>
+    @for (int i = 0; i < assignments.Count(); i++)
+    {
+        var assignment = assignments[i];
+        <div class="card">
+            <div style="margin: auto; border: 3px solid black; padding: 5px; background-color: gray"> 
+                    <a style="margin: auto; width: 100%;" class="btn btn-secondary" 
+                    asp-controller="Assignment" asp-action="Details" asp-route-id="@assignment.Id" asp-route-information="@assignment.GetInformation()"> @assignment.Title</a> </div>
+            <p>@assignment.Description</p>
+            <p>Category: @assignment.Category.Name</p>
+        </div>
+    }
+</div>
+
+<div class="row">
+    <div class="col-12 text-center">
+        <button class="btn btn-secondary" id="statistics-button">Statistics</button>
     </div>
+</div>
+
+<div style="background-color: #949494; text-align: center; border-radius: 10px;" class="mt-4 p-5 d-none" id="statistics">
+    <div class="row">
+        <h2 class="col-md-2" id="total-assignments"></h2>
+        <h2 class="col-md-2" id="total-accepted"></h2>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('#statistics-button').on('click', ev => { 
+            $.get('/api/statistic', data => {
+                $('#total-assignments').text(data.totalAssignments + ' Assignments');
+                $('#total-accepted').text(data.totalAccepted + ' Accepted');
+                $('#statistics').removeClass('d-none');
+                $('#statistics-button').hide();
+            });
+        });
+    </script>
+}

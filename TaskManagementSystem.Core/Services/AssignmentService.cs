@@ -155,9 +155,9 @@ namespace TaskManagementSystem.Core.Services
             return assignment.Id;
         }
 
-        public async Task DeleteAsync(int houseId)
+        public async Task DeleteAsync(int assignmentId)
         {
-            await repository.DeleteAsync<Assignment>(houseId);
+            await repository.DeleteAsync<Assignment>(assignmentId);
             await repository.SaveChangesAsync();
         }
 

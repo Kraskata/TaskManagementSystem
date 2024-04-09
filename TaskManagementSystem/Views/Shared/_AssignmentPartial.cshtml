@@ -11,8 +11,8 @@
             </h6>
             <h6>(@(Model.IsAssigned ? "Assigned" : "Not Assigned"))</h6>
             <br />
-            <a asp-controller="Assignment" asp-action="Details" asp-route-id="@Model.Id"
-               class="btn btn-success" style="background:#3630a3;color:white;">Details</a>
+            <a asp-controller="Assignment" asp-action="Details" asp-route-id="@Model.Id" asp-route-information="@Model.GetInformation()" 
+            class="btn btn-success" style="background:#3630a3;color:white;">Details</a>
             @if (this.User.Identity.IsAuthenticated)
             {
                 <a asp-controller="Assignment" asp-action="Edit" asp-route-id="@Model.Id"

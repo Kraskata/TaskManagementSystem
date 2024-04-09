@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TaskManagementSystem.Core.Contracts;
 using static TaskManagementSystem.Core.Constants.MessageConstants;
 using static TaskManagementSystem.Infrastructure.Constants.DataConstants;
 
 namespace TaskManagementSystem.Core.Models.Assignment
 {
-    public class AssignmentServiceModel
+    public class AssignmentServiceModel : IAssignmentModel
     {
         public  int Id { get; set; }
 
