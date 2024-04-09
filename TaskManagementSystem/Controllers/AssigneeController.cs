@@ -46,7 +46,7 @@ namespace TaskManagementSystem.Controllers
 
             await assigneeService.CreateAsync(User.Id(), model.PhoneNumber);
 
-            return RedirectToAction(nameof(AssignmentController.All));
+            return RedirectToAction(nameof(AssignmentController.All), "Assignment");
         }
     }
 }

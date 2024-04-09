@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskManagementSystem.Attribute;
 using TaskManagementSystem.Core.Contracts;
+using TaskManagementSystem.Core.Exceptions;
 using TaskManagementSystem.Core.Models.Assignment;
 
 namespace TaskManagementSystem.Controllers
@@ -10,17 +11,22 @@ namespace TaskManagementSystem.Controllers
     public class AssignmentController : BaseController
     {
         private readonly IAssignmentService assignmentService;
+
         private readonly IAssigneeService assigneeService;
+
+        private readonly ILogger logger;
 
         public AssignmentController(
             IAssignmentService _assignmentService,
-            IAssigneeService _assigneeService)
+            IAssigneeService _assigneeService,
+            ILogger<AssignmentController> _logger)
         {
             assignmentService = _assignmentService;
             assigneeService = _assigneeService;
+            logger = _logger;
         }
 
-        [AllowAnonymous]
+    [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> All([FromQuery]AllAssignmentsQueryModel query)
         {
@@ -158,21 +164,94 @@ namespace TaskManagementSystem.Controllers
             return RedirectToAction(nameof(Details), new {id});
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (await assignmentService.ExistsAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
+            if (await assignmentService.HasAssigneeWithIdAsync(id, User.Id()) == false)
+            {
+                return Unauthorized();
+            }
+
+            var assignment = await assignmentService.AssignmentDetailsByIdAsync(id);
+
+            var model = new AssignmentDetailsViewModel()
+            {
+                Id = id,
+                Description = assignment.Description,
+                Title = assignment.Title
+            };
+
+            return View(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Delete(AssignmentDetailsViewModel model)
         {
+            if (await assignmentService.ExistsAsync(model.Id) == false)
+            {
+                return BadRequest();
+            }
+
+            if (await assignmentService.HasAssigneeWithIdAsync(model.Id, User.Id()) == false)
+            {
+                return Unauthorized();
+            }
+
+            await assignmentService.DeleteAsync(model.Id);
+
+
             return RedirectToAction(nameof(All));
         }
 
         [HttpPost]
         public async Task<IActionResult> Accept(int id)
         {
+            if (await assignmentService.ExistsAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
+            if (await assigneeService.ExistsByIdAsync(User.Id()))
+            {
+                return Unauthorized();
+            }
+
+            if (await assignmentService.IsAcceptedAsync(id))
+            {
+                return BadRequest();
+            }
+
+            await assignmentService.AcceptAsync(id, User.Id());
+
             return RedirectToAction(nameof(Mine));
         }
 
         [HttpPost]
         public async Task<IActionResult> Leave(int id)
         {
+            if (await assignmentService.ExistsAsync(id) == false)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await assignmentService.LeaveAsync(id, User.Id());
+            }
+            catch (UnauthorizedActionException uae)
+            {
+                logger.LogError(uae, "HouseController/Leave");
+
+                return Unauthorized();
+            }
+
+
             return RedirectToAction(nameof(Mine));
         }
     }

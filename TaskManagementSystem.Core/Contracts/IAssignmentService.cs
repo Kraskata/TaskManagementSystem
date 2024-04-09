@@ -39,11 +39,11 @@ namespace TaskManagementSystem.Core.Contracts
 
         Task DeleteAsync(int assignmentId);
 
-        Task<bool> IsAssignedAsync(int assignmentId);
+        Task<bool> IsAcceptedAsync(int assignmentId);
 
-        Task<bool> IsAssignedByIUserWithIdAsync(int assignmentId, string userId);
+        Task<bool> IsAcceptedByUserWithIdAsync(int assignmentId, string userId);
 
-        Task AssignAsync(int id, string userId);
+        Task AcceptAsync(int id, string userId);
 
         Task LeaveAsync(int assignmentId, string userId);
     }

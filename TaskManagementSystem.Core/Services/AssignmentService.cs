@@ -98,7 +98,7 @@ namespace TaskManagementSystem.Core.Services
                 .ToListAsync();
         }
 
-        public async Task AssignAsync(int id, string userId)
+        public async Task AcceptAsync(int id, string userId)
         {
             var assignment = await repository.GetByIdAsync<Assignment>(id);
 
@@ -212,7 +212,7 @@ namespace TaskManagementSystem.Core.Services
                 .AnyAsync(a => a.Id == assignmentId && a.Assignee.UserId == userId);
         }
 
-        public async Task<bool> IsAssignedAsync(int assignmentId)
+        public async Task<bool> IsAcceptedAsync(int assignmentId)
         {
             bool result = false;
             var assignment = await repository.GetByIdAsync<Assignment>(assignmentId);
@@ -225,7 +225,7 @@ namespace TaskManagementSystem.Core.Services
             return result;
         }
 
-        public async Task<bool> IsRentedByIUserWithIdAsync(int assignmentId, string userId)
+        public async Task<bool> IsAcceptedByUserWithIdAsync(int assignmentId, string userId)
         {
             bool result = false;
             var assignment = await repository.GetByIdAsync<Assignment>(assignmentId);
@@ -238,22 +238,12 @@ namespace TaskManagementSystem.Core.Services
             return result;
         }
 
-        public Task<bool> IsAssignedByIUserWithIdAsync(int assignmentId, string userId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task LeaveAsync(int assignmentId, string userId)
         {
             var assignment = await repository.GetByIdAsync<Assignment>(assignmentId);
 
             if (assignment != null)
             {
-                if (assignment.WorkerId != userId)
-                {
-                    throw new UnauthorizedActionException("The user is not the renter");
-                }
-
                 assignment.WorkerId = null;
                 await repository.SaveChangesAsync();
             }
