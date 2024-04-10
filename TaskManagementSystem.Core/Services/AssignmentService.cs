@@ -257,7 +257,8 @@ namespace TaskManagementSystem.Core.Services
         {
             return await repository
                 .AllReadOnly<Infrastructure.Data.Models.Assignment>()
-                .OrderBy(a => a.Id)
+                .Where(a => a.WorkerId == null)
+                .OrderByDescending(a => a.Id)
                 .Take(4)
                 .Select(a => new AssignmentIndexServiceModel()
                 {
