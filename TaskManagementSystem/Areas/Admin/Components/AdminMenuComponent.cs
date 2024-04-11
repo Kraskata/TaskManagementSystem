@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TaskManagementSystem.Components
+namespace TaskManagementSystem.Areas.Admin.Components
 {
     public class AdminMenuComponent : ViewComponent
     {

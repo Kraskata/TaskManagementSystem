@@ -49,6 +49,10 @@ app.UseEndpoints(endpoints =>
         pattern: "/Assignment/Details/{id}/{information}",
         defaults: new {Controller = "Assignment", Action = "Details"}
         );
+    endpoints.MapControllerRoute(
+        name: "areas",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+        );
 });
 
 await app.SeedAdminRoleAsync();
