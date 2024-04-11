@@ -51,4 +51,6 @@ app.UseEndpoints(endpoints =>
         );
 });
 
+await app.SeedAdminRoleAsync();
+
 await app.RunAsync();

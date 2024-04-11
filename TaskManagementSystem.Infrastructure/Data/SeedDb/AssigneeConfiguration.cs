@@ -10,7 +10,7 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
         {
             var data = new SeedData();
 
-            builder.HasData(new Assignee[] { data.Assignee });
+            builder.HasData(new Assignee[] { data.Assignee, data.AdminAssignee });
         }
     }
 }

@@ -9,7 +9,11 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
 
         public ApplicationUser GuestUser { get; set; }
 
+        public ApplicationUser AdminUser { get; set; }
+
         public Assignee Assignee { get; set; }
+
+        public Assignee AdminAssignee { get; set; }
 
         public Category MinimalCategory { get; set; }
 
@@ -38,10 +42,12 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
             AssigneeUser = new ApplicationUser()
             {
                 Id = "dea12856-c198-4129-b3f3-b893d8395082",
-                UserName = "agent@mail.com",
+                UserName = "assignee@mail.com",
                 NormalizedUserName = "agent@mail.com",
-                Email = "agent@mail.com",
-                NormalizedEmail = "agent@mail.com"
+                Email = "assignee@mail.com",
+                NormalizedEmail = "assignee@mail.com",
+                FirstName = "Assignee",
+                LastName = "Assigneev"
             };
 
             AssigneeUser.PasswordHash =
@@ -53,11 +59,27 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
                 UserName = "guest@mail.com",
                 NormalizedUserName = "guest@mail.com",
                 Email = "guest@mail.com",
-                NormalizedEmail = "guest@mail.com"
+                NormalizedEmail = "guest@mail.com",
+                FirstName = "Guest",
+                LastName = "Guestov"
             };
 
             GuestUser.PasswordHash =
             hasher.HashPassword(AssigneeUser, "guest123");
+
+            AdminUser = new ApplicationUser()
+            {
+                Id = "15480979-8cbd-44cf-a085-f7e32c1b50f2",
+                UserName = "admin@mail.com",
+                NormalizedUserName = "admin@MAIL.COM",
+                Email = "admin@mail.com",
+                NormalizedEmail = "admin@MAIL.COM",
+                FirstName = "Admin",
+                LastName = "Adminov"
+            };
+
+            GuestUser.PasswordHash =
+            hasher.HashPassword(AdminUser, "admin123");
         }
 
         private void SeedAssignees()
@@ -67,6 +89,13 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
                 Id = 1,
                 PhoneNumber = "+359888888888",
                 UserId = AssigneeUser.Id
+            };
+
+            AdminAssignee = new Assignee()
+            {
+                Id = 6,
+                PhoneNumber = "+359888888887",
+                UserId = AdminUser.Id
             };
         }
 
