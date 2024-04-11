@@ -61,14 +61,16 @@
             <div class="form-inline">
                 @if (this.User.Identity.IsAuthenticated)
                 {
-                    if (await assignmentService.HasAssigneeWithIdAsync(Model.Id, User.Id()))
+                    if (await assignmentService.HasAssigneeWithIdAsync(Model.Id, User.Id())  ||
+                        User.IsAdmin())
                     {
                                             <a class="btn btn-warning" asp-controller="Assignment" asp-action="Edit"
                        asp-route-id="@Model.Id" style="background:#f58442;color:#ffd94f;">Edit</a>
                     <a class="ml-2 btn btn-danger" asp-controller="Assignment" asp-action="Delete"
                        asp-route-id="@Model.Id" style="background:#940000;color:#ff4d4d;">Delete</a>
                     }
-                    @if (!Model.IsAssigned &&  (await assigneeService.ExistsByIdAsync(User.Id())) == false)
+                    @if (!Model.IsAssigned &&  ((await assigneeService.ExistsByIdAsync(User.Id())) == false ||
+                        User.IsAdmin()))
                     {
                         <form class="ml-2" asp-controller="Assignment"
                               asp-action="Accept" asp-route-id="@Model.Id" method="post">

@@ -78,7 +78,7 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
                 LastName = "Adminov"
             };
 
-            GuestUser.PasswordHash =
+            AdminUser.PasswordHash =
             hasher.HashPassword(AdminUser, "admin123");
         }
 

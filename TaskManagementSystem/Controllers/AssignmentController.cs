@@ -130,7 +130,8 @@ namespace TaskManagementSystem.Controllers
                 return BadRequest();
             }
 
-            if (!await assignmentService.HasAssigneeWithIdAsync(id, User.Id()))
+            if (!await assignmentService.HasAssigneeWithIdAsync(id, User.Id()) &&
+                !User.IsAdmin())
             {
                 return Unauthorized();
             }
@@ -148,12 +149,13 @@ namespace TaskManagementSystem.Controllers
                 return BadRequest();
             }
 
-            if (!await assignmentService.HasAssigneeWithIdAsync(id, User.Id()))
+            if (!await assignmentService.HasAssigneeWithIdAsync(id, User.Id()) &&
+                !User.IsAdmin())
             {
                 return Unauthorized();
             }
 
-            if (await assignmentService.CategoryExistsAsync(model.CategoryId) == false)
+            if (!await assignmentService.CategoryExistsAsync(model.CategoryId))
             {
                 ModelState.AddModelError(nameof(model.CategoryId), "Category does not exist.");
             }
@@ -179,7 +181,8 @@ namespace TaskManagementSystem.Controllers
                 return BadRequest();
             }
 
-            if (await assignmentService.HasAssigneeWithIdAsync(id, User.Id()) == false)
+            if (await assignmentService.HasAssigneeWithIdAsync(id, User.Id()) == false &&
+                !User.IsAdmin())
             {
                 return Unauthorized();
             }
@@ -199,12 +202,13 @@ namespace TaskManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(AssignmentDetailsViewModel model)
         {
-            if (await assignmentService.ExistsAsync(model.Id) == false)
+            if (!await assignmentService.ExistsAsync(model.Id))
             {
                 return BadRequest();
             }
 
-            if (await assignmentService.HasAssigneeWithIdAsync(model.Id, User.Id()) == false)
+            if (!await assignmentService.HasAssigneeWithIdAsync(model.Id, User.Id()) &&
+                !User.IsAdmin())
             {
                 return Unauthorized();
             }
@@ -223,7 +227,8 @@ namespace TaskManagementSystem.Controllers
                 return BadRequest();
             }
 
-            if (await assigneeService.ExistsByIdAsync(User.Id()))
+            if (await assigneeService.ExistsByIdAsync(User.Id()) &&
+                !User.IsAdmin())
             {
                 return Unauthorized();
             }

@@ -17,7 +17,8 @@
             class="btn btn-success" style="background:#3630a3;color:white;">Details</a>
             @if (this.User.Identity.IsAuthenticated)
             {
-                @if (await assignmentService.HasAssigneeWithIdAsync(Model.Id, User.Id()))
+                @if (await assignmentService.HasAssigneeWithIdAsync(Model.Id, User.Id()) ||
+                User.IsAdmin())
                 {
                      <a asp-controller="Assignment" asp-action="Edit" asp-route-id="@Model.Id"
                     class="btn btn-warning" style="background:#f58442;color:#ffd94f;">Edit</a>
@@ -25,7 +26,8 @@
                     class="btn btn-danger" style="background:#940000;color:#ff4d4d;">Delete</a>
                 }
                 <p></p>
-                @if (!Model.IsAssigned && (await assigneeService.ExistsByIdAsync(User.Id())) == false)
+                @if (!Model.IsAssigned && ((await assigneeService.ExistsByIdAsync(User.Id())) == false ||
+                User.IsAdmin()))
                 {
                     <form class="input-group-sm" asp-controller="Assignment"
                   asp-action="Accept" asp-route-id="@Model.Id" method="post">
