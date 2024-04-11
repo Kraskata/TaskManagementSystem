@@ -1,4 +1,4 @@
-﻿namespace TaskManagementSystem.Core.Constants
+﻿namespace TaskManagementSystem.Infrastructure.Constants
 {
     public static class CustomClaims
     {

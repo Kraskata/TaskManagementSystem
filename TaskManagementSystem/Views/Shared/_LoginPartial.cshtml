@@ -9,7 +9,7 @@
 
     if (SignInManager.IsSignedIn(User))
     {
-        userName = User.FindFirstValue(TaskManagementSystem.Core.Constants.CustomClaims.UserFullNameClaim) ?? string.Empty;
+        userName = User.FindFirstValue(TaskManagementSystem.Infrastructure.Constants.CustomClaims.UserFullNameClaim) ?? string.Empty;
     }
 }
 

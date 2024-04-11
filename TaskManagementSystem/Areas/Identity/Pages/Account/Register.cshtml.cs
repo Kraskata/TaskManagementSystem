@@ -13,7 +13,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using TaskManagementSystem.Infrastructure.Data.Models;
 using static TaskManagementSystem.Infrastructure.Constants.DataConstants;
-using static TaskManagementSystem.Core.Constants.CustomClaims;
+using static TaskManagementSystem.Infrastructure.Constants.CustomClaims;
 
 namespace TaskManagementSystem.Areas.Identity.Pages.Account
 {

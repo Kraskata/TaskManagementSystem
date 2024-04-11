@@ -18,6 +18,7 @@ namespace TaskManagementSystem.Infrastructure.Data
             builder.ApplyConfiguration(new AssigneeConfiguration());
             builder.ApplyConfiguration(new CategoryConfiguration());
             builder.ApplyConfiguration(new AssignmentConfiguration());
+            builder.ApplyConfiguration(new UserClaimsConfiguration());
 
             base.OnModelCreating(builder);
         }

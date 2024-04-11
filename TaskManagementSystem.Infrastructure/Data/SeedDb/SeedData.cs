@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using TaskManagementSystem.Infrastructure.Data.Models;
+using static TaskManagementSystem.Infrastructure.Constants.CustomClaims;
 
 namespace TaskManagementSystem.Infrastructure.Data.SeedDb
 {
@@ -14,6 +15,12 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
         public Assignee Assignee { get; set; }
 
         public Assignee AdminAssignee { get; set; }
+
+        public IdentityUserClaim<string> AssigneeUserClaim { get; set; }
+
+        public IdentityUserClaim<string> GuestUserClaim { get; set; }
+
+        public IdentityUserClaim<string> AdminUserClaim { get; set; }
 
         public Category MinimalCategory { get; set; }
 
@@ -50,6 +57,14 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
                 LastName = "Assigneev"
             };
 
+            AssigneeUserClaim = new IdentityUserClaim<string>()
+            {
+                Id = 1,
+                ClaimType = UserFullNameClaim,
+                ClaimValue = "Assignee Assigneev",
+                UserId = "dea12856-c198-4129-b3f3-b893d8395082"
+            };
+
             AssigneeUser.PasswordHash =
                  hasher.HashPassword(AssigneeUser, "agent123");
 
@@ -64,6 +79,14 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
                 LastName = "Guestov"
             };
 
+            GuestUserClaim = new IdentityUserClaim<string>()
+            {
+                Id = 2,
+                ClaimType = UserFullNameClaim,
+                ClaimValue = "Guest Guestov",
+                UserId = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e"
+            };
+
             GuestUser.PasswordHash =
             hasher.HashPassword(AssigneeUser, "guest123");
 
@@ -76,6 +99,14 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
                 NormalizedEmail = "admin@MAIL.COM",
                 FirstName = "Admin",
                 LastName = "Adminov"
+            };
+
+            AdminUserClaim = new IdentityUserClaim<string>()
+            {
+                Id = 3,
+                ClaimType = UserFullNameClaim,
+                UserId = "15480979-8cbd-44cf-a085-f7e32c1b50f2",
+                ClaimValue = "Admin Adminov"
             };
 
             AdminUser.PasswordHash =
