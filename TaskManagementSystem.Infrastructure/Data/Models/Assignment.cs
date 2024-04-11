@@ -43,6 +43,9 @@ namespace TaskManagementSystem.Infrastructure.Data.Models
         [Comment("User id of the worker accepting the task")]
         public string? WorkerId { get; set; }
 
+        [Comment("Is house approved by an admin")]
+        public bool IsApproved { get; set; }
+
         [Required]
         [Comment("Identifier For Task Category")]
         public int CategoryId { get; set; }

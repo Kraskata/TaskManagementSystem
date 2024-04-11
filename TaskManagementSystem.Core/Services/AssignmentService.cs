@@ -22,6 +22,7 @@ namespace TaskManagementSystem.Core.Services
         {
             return await repository.AllReadOnly<Assignment>()
                 .Where(a => a.AssigneeId == assigneeId)
+                .Where(a => a.IsApproved)
                 .ProjectToAssignmentServiceModel()
                 .ToListAsync();
         }
@@ -34,9 +35,16 @@ namespace TaskManagementSystem.Core.Services
                 .ToListAsync();
         }
 
-        public async Task<AssignmentQueryServiceModel> AllAsync(string? category = null, string? searchItem = null, AssignmentSorting sorting = AssignmentSorting.Newest, int currentPage = 1, int assignmentsPerPage = 4)
+        public async Task<AssignmentQueryServiceModel> AllAsync
+            (string? category = null, 
+            string? searchItem = null, 
+            AssignmentSorting sorting = 
+            AssignmentSorting.Newest,
+            int currentPage = 1, 
+            int assignmentsPerPage = 4)
         {
-            var assignmentsToShow = repository.AllReadOnly<Assignment>();
+            var assignmentsToShow = repository.AllReadOnly<Assignment>()
+                .Where(h => h.IsApproved);
 
             if (category != null)
             {
@@ -113,6 +121,7 @@ namespace TaskManagementSystem.Core.Services
         {
             return await repository.AllReadOnly<Assignment>()
                 .Where(a => a.Id == id)
+                .Where(a => a.IsApproved)
                 .Select(a => new AssignmentDetailsServiceModel()
                 {
                     Id = a.Id,
@@ -191,6 +200,7 @@ namespace TaskManagementSystem.Core.Services
         {
             var assignment = await repository.AllReadOnly<Assignment>()
                 .Where(a => a.Id == id)
+                .Where(a => a.IsApproved)
                 .Select(a => new AssignmentFormModel()
                 {
                     DoneBy = a.DoneBy,
@@ -257,6 +267,7 @@ namespace TaskManagementSystem.Core.Services
         {
             return await repository
                 .AllReadOnly<Infrastructure.Data.Models.Assignment>()
+                .Where(a => a.IsApproved)
                 .Where(a => a.WorkerId == null)
                 .OrderByDescending(a => a.Id)
                 .Take(4)

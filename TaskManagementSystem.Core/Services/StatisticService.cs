@@ -18,9 +18,11 @@ namespace TaskManagementSystem.Core.Services
         public async Task<StatisticServiceModel> TotalAsync()
         {
             int totalAssignments = await repository.AllReadOnly<Assignment>()
+                .Where(a => a.IsApproved)
                 .CountAsync();
 
             int totalAccepted = await repository.AllReadOnly<Assignment>()
+                .Where(a => a.IsApproved)
                 .Where(h => h.WorkerId != null)
                 .CountAsync();
 
