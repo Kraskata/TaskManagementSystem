@@ -2,7 +2,7 @@
 
 namespace TaskManagementSystem.Components
 {
-    public class AdminMenuComponent : ViewComponent
+    public class MainMenuComponent : ViewComponent
     {
         public async Task<IViewComponentResult> InvokeAsync()
         {
