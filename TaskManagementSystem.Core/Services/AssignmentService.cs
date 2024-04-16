@@ -22,7 +22,6 @@ namespace TaskManagementSystem.Core.Services
         {
             return await repository.AllReadOnly<Assignment>()
                 .Where(a => a.AssigneeId == assigneeId)
-                .Where(a => a.IsApproved)
                 .ProjectToAssignmentServiceModel()
                 .ToListAsync();
         }
@@ -43,8 +42,7 @@ namespace TaskManagementSystem.Core.Services
             int currentPage = 1, 
             int assignmentsPerPage = 4)
         {
-            var assignmentsToShow = repository.AllReadOnly<Assignment>()
-                .Where(h => h.IsApproved);
+            var assignmentsToShow = repository.AllReadOnly<Assignment>();
 
             if (category != null)
             {
@@ -121,11 +119,9 @@ namespace TaskManagementSystem.Core.Services
         {
             return await repository.AllReadOnly<Assignment>()
                 .Where(a => a.Id == id)
-                .Where(a => a.IsApproved)
                 .Select(a => new AssignmentDetailsServiceModel()
                 {
                     Id = a.Id,
-                    Description = a.Description,
                     Assignee = new Models.Assignee.AssigneeServiceModel()
                     {
                         FullName = $"{a.Assignee.User.FirstName} {a.Assignee.User.LastName}",
@@ -133,12 +129,11 @@ namespace TaskManagementSystem.Core.Services
                         PhoneNumber = a.Assignee.PhoneNumber
                     },
                     Category = a.Category.Name,
+                    Description = a.Description,
                     IsAssigned = a.WorkerId != null,
                     Paid = a.Paid,
                     DoneBy = a.DoneBy,
-                    Assigned = a.Assigned,
                     Title = a.Title
-                    
                 })
                 .FirstAsync();
         }
@@ -200,7 +195,6 @@ namespace TaskManagementSystem.Core.Services
         {
             var assignment = await repository.AllReadOnly<Assignment>()
                 .Where(a => a.Id == id)
-                .Where(a => a.IsApproved)
                 .Select(a => new AssignmentFormModel()
                 {
                     DoneBy = a.DoneBy,
@@ -267,7 +261,6 @@ namespace TaskManagementSystem.Core.Services
         {
             return await repository
                 .AllReadOnly<Infrastructure.Data.Models.Assignment>()
-                .Where(a => a.IsApproved)
                 .Where(a => a.WorkerId == null)
                 .OrderByDescending(a => a.Id)
                 .Take(4)

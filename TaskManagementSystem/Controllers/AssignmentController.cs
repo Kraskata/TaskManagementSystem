@@ -86,11 +86,6 @@ namespace TaskManagementSystem.Controllers
         [MustBeAssignee]
         public async Task<IActionResult> Add()
         {
-            if (await assigneeService.ExistsByIdAsync(User.Id()) == false)
-            {
-                return RedirectToAction(nameof(AssigneeController.Become), "Assignee");
-            }
-
             var model = new AssignmentFormModel()
             {
                 Categories = await assignmentService.AllCategoriesAsync()
@@ -119,7 +114,7 @@ namespace TaskManagementSystem.Controllers
 
             int newAssigneeId = await assignmentService.CreateAsync(model, assigneeId ?? 0);
 
-            return RedirectToAction(nameof(Details), new { id = newAssigneeId , information = model.GetInformation()});
+            return RedirectToAction(nameof(Details), new { id = newAssigneeId, information = model.GetInformation() });
         }
 
         [HttpGet]
