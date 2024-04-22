@@ -127,13 +127,15 @@ namespace TaskManagementSystem.Core.Services
                         FullName = $"{a.Assignee.User.FirstName} {a.Assignee.User.LastName}",
                         Gmail = a.Assignee.User.Email,
                         PhoneNumber = a.Assignee.PhoneNumber
+                        
                     },
                     Category = a.Category.Name,
                     Description = a.Description,
                     IsAssigned = a.WorkerId != null,
                     Paid = a.Paid,
                     DoneBy = a.DoneBy,
-                    Title = a.Title
+                    Title = a.Title,
+                    Assigned = a.Assigned
                 })
                 .FirstAsync();
         }
@@ -202,7 +204,6 @@ namespace TaskManagementSystem.Core.Services
                     Title = a.Title,
                     Description = a.Description,
                     CategoryId = a.CategoryId
-
                 })
                 .FirstOrDefaultAsync();
 

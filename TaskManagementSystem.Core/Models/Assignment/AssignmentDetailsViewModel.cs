@@ -11,5 +11,7 @@ namespace TaskManagementSystem.Core.Models.Assignment
         public string Description { get; set; } = string.Empty;
 
         public string DoneBy { get; set; } = string.Empty;
+
+        public string Assigned { get; set; } = string.Empty;
     }
 }
