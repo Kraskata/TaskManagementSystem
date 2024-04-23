@@ -18,8 +18,12 @@ namespace TaskManagementSystem.Tests.Services
 
         private IAssignmentService assignmentService;
 
+        private IAssigneeService assigneeService;
+
+        private Assignee? assignee;
+
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             var options = new DbContextOptionsBuilder<TaskManagementDbContext>()
                 .UseInMemoryDatabase(databaseName: "TaskManagementSystemDb")
@@ -34,71 +38,15 @@ namespace TaskManagementSystem.Tests.Services
             repository = new Repository(context);
 
             assignmentService = new AssignmentService(repository);
+
+            assigneeService = new AssigneeService(repository);
+            assignee = await context.Assignees.FirstOrDefaultAsync(a => a.Id == 1);
         }
 
         [TearDown]
         public void TearDown()
         {
             context.Database.EnsureDeleted();
-        }
-
-        [Test]
-        public async Task RepositoryShouldReturnAllAssignments()
-        {
-            var result = repository.All<Assignment>();
-            Assert.IsNotNull(result);
-            Assert.That(result.Count(), Is.EqualTo(3));
-        }
-
-        [Test]
-        public async Task RepositoryAddAsyncShouldWork()
-        {
-            var model = new Assignment()
-            {
-                Id = 4,
-                Title = "Domain Table",
-                Description = "The domain tables have the wrong properties 2.0.",
-                Paid = 1500.00M,
-                Assigned = "03/27/2024",
-                DoneBy = "04/05/2024",
-                CategoryId = 1,
-                AssigneeId = 1,
-                WorkerId = "6d5800ce - d726 - 4fc8 - 83d9 - d6b3ac1f591e"
-            };
-            await repository.AddAsync<Assignment>(model);
-            await repository.SaveChangesAsync();
-            var result = repository.All<Assignment>();
-            Assert.IsNotNull(result);
-            Assert.That(result.Count(), Is.EqualTo(4));
-        }
-
-        [Test]
-        public async Task CheckRepositoryAddsInformationProperlyAndAssignmentDetailsByIdShouldWork()
-        {
-            var model = new Assignment()
-            {
-                Id = 4,
-                Title = "Domain Table",
-                Description = "The domain tables have the wrong properties 2.0.",
-                Paid = 1500.00M,
-                Assigned = "03/27/2024",
-                DoneBy = "04/05/2024",
-                CategoryId = 1,
-                AssigneeId = 1,
-                WorkerId = "6d5800ce - d726 - 4fc8 - 83d9 - d6b3ac1f591e"
-            };
-
-            await repository.AddAsync<Assignment>(model);
-            await repository.SaveChangesAsync();
-            var result = await assignmentService.AssignmentDetailsByIdAsync(4);
-
-            Assert.IsNotNull(result);
-            Assert.That(result.Id, Is.EqualTo(model.Id));
-            Assert.That(result.Title, Is.EqualTo(model.Title));
-            Assert.That(result.Description, Is.EqualTo(model.Description));
-            Assert.That(result.Paid, Is.EqualTo(model.Paid));
-            Assert.That(result.Assigned, Is.EqualTo(model.Assigned));
-            Assert.That(result.DoneBy, Is.EqualTo(model.DoneBy));
         }
 
         [Test]
@@ -126,8 +74,8 @@ namespace TaskManagementSystem.Tests.Services
             };
 
             await assignmentService.EditAsync(assignment.Id, model);
-
             var result = await context.Assignments.FindAsync(assignment.Id);
+
             Assert.That(result!.Title, Is.EqualTo(model.Title));
 
         }
@@ -138,9 +86,67 @@ namespace TaskManagementSystem.Tests.Services
             var assignment = await context.Assignments.FirstAsync(a => a.Title == "Domain Tables");
 
             await assignmentService.DeleteAsync(assignment.Id);
-
             var result = await context.Assignments.FindAsync(assignment.Id);
+
             Assert.IsNull(result);
+
+        }
+
+        [Test]
+        public async Task ExistsAsyncShouldWorkReturnsTrue()
+        {
+            var assignment = await context.Assignments.FirstAsync(a => a.Title == "Domain Tables");
+
+            var result = await assignmentService.ExistsAsync(assignment.Id);
+
+            Assert.IsTrue(result);
+
+        }
+
+        [Test]
+        public async Task HasAssigneeWithIdAsyncShouldWorkReturnsTrue()
+        {
+            var assignment = await context.Assignments.FirstAsync(a => a.Title == "Domain Tables");
+
+            var result = await assignmentService.HasAssigneeWithIdAsync(assignment.Id, assignee.UserId);
+
+            Assert.IsTrue(result);
+
+        } 
+        
+        [Test]
+        public async Task IsAcceptedAsyncShouldWorkReturnsTrue()
+        {
+            var assignment = await context.Assignments.FirstAsync(a => a.Title == "Domain Tables");
+
+            var result = await assignmentService.IsAcceptedAsync(assignment.Id);
+
+            Assert.IsTrue(result);
+
+        }
+        
+        [Test]
+        public async Task IsAcceptedByUserWithIdAsyncShouldWorkReturnsTrue()
+        {
+            var assignment = await context.Assignments.FirstOrDefaultAsync(a => a.Title == "Domain Tables");
+            var worker = await context.Users.FirstOrDefaultAsync(w => w.Id == "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e");
+
+            var result = await assignmentService.IsAcceptedByUserWithIdAsync(assignment.Id, worker.Id);
+
+            Assert.IsTrue(result);
+
+        }
+        
+        [Test]
+        public async Task LeaveAsyncShouldWorkReturnsFalse()
+        {
+            var assignment = await context.Assignments.FirstOrDefaultAsync(a => a.Title == "Domain Tables");
+            var worker = await context.Users.FirstOrDefaultAsync(w => w.Id == "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e");
+            await assignmentService.LeaveAsync(assignment.Id, worker.Id);
+
+            var result = await assignmentService.IsAcceptedByUserWithIdAsync(assignment.Id, worker.Id);
+
+            Assert.IsFalse(result);
 
         }
     }

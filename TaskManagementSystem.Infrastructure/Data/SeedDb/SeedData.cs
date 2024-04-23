@@ -88,7 +88,7 @@ namespace TaskManagementSystem.Infrastructure.Data.SeedDb
             };
 
             GuestUser.PasswordHash =
-            hasher.HashPassword(AssigneeUser, "guest123");
+            hasher.HashPassword(GuestUser, "guest123");
 
             AdminUser = new ApplicationUser()
             {
