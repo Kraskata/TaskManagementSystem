@@ -5,7 +5,6 @@ using TaskManagementSystem.Core.Models.Assignment;
 using TaskManagementSystem.Core.Models.Home;
 using TaskManagementSystem.Infrastructure.Data.Common;
 using TaskManagementSystem.Infrastructure.Data.Models;
-using TaskManagementSystem.Core.Exceptions;
 
 namespace TaskManagementSystem.Core.Services
 {
